@@ -79,7 +79,7 @@ namespace ExamCardSeller.Services
             if(paystackRes?.Data?.Status == "success")
             {
                 order.PurchaseStatus = PurchaseStatus.PaymentSuccess;
-                order.PaymentDate = DateTime.Now;
+                order.PaymentDate = DateTime.UtcNow;
                 order.PurchaseContent = JsonSerializer.Serialize(new { Token = clientOrderReference });
                 await purchaseRequestRepository.SaveChangesAsync();
                 return new ConfirmOrderResponse { Success = true, Token = clientOrderReference };
