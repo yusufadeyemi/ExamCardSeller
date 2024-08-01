@@ -7,6 +7,7 @@ using ExamCardSeller.Validators;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System;
+using ExamCardSeller.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,5 +44,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.EnsureDatabaseSetup(true);
 
 app.Run();
