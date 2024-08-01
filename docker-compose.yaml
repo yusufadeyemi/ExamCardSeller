@@ -17,6 +17,7 @@ services:
       - PaystackSettings__ApiKey=${PaystackSettings__ApiKey}
       - PaystackSettings__BaseUrl=${PaystackSettings__BaseUrl}
       - PaystackSettings__Callback=${PaystackSettings__Callback}
+      - SENTRY__DSN=${SENTRY__DSN}
     ports:
       - "5005:8080"
     networks:

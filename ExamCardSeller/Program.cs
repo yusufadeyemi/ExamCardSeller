@@ -8,6 +8,8 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System;
 using ExamCardSeller.Extensions;
+using ExamCardSeller.Middlewares;
+using Sentry;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,8 +32,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 // Register FluentValidation validators
 builder.Services.AddTransient<IValidator<CreateVerificationRequest>, CreatePurchaseRequestValidator>();
+if (builder.Environment.IsProduction())
+{
+    builder.WebHost.UseSentry();
+}
 var app = builder.Build();
-
+app.UseMiddleware<ExceptionMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
