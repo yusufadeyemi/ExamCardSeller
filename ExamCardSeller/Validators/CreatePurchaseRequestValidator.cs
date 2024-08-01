@@ -11,9 +11,9 @@ public class CreatePurchaseRequestValidator: AbstractValidator<CreateVerificatio
         {
             RuleFor(order => order.ClientOrderReference)
                 .NotEmpty().WithMessage("client order reference is required.")
-                .MaximumLength(50).WithMessage("client order reference must not exceed 50 characters.")
-                .MustAsync(async (clientOrderReference, cancellation) => !await repository.AnyAsync(clientOrderReference))
-            .WithMessage("client order reference already exists.");
+                .MaximumLength(50).WithMessage("client order reference must not exceed 50 characters.");
+                //.MustAsync(async (clientOrderReference, cancellation) => !await repository.AnyAsync(clientOrderReference))
+            //.WithMessage("client order reference already exists.");
 
         }
     }

@@ -32,6 +32,23 @@ namespace ExamCardSeller.Services
 
                 throw new ValidationException(validationResult.Errors);
             }
+            if(await purchaseRequestRepository.AnyAsync(request.ClientOrderReference))
+            {
+                var order = await purchaseRequestRepository.FindByClientReferenceAsync(request.ClientOrderReference);
+                if (order != null && order.PurchaseStatus == PurchaseStatus.Pending && order.PurchaserEmailId == request.PurchaserEmailId)
+                {
+                    var vRes = await VerifyOrder(request.ClientOrderReference);
+                    if (vRes != null && !vRes.Success)
+                    {
+                        return new CreateVerificationResponse
+                        {
+                            ClientOrderReference = order.ClientOrderReference,
+                            PaymentLink = order.PaymentLink!
+                        };
+                    }
+                }
+                throw new BadHttpRequestException($"The order reference has been used or invalid");
+            }
             // Paystack Create Link
             // amount in kobo
             var createLinkRequest = new CreatePaymentLinkRequest
@@ -42,7 +59,7 @@ namespace ExamCardSeller.Services
                 CallbackUrl = request.CallbackUrl
             };
             var createLinkResponse = await paystack.CreatePaymentLinkAsync(createLinkRequest);
-            if (!createLinkResponse.Status)
+            if (createLinkResponse?.Status != true || string.IsNullOrEmpty(createLinkResponse?.Data?.AuthorizationUrl) )
                 throw new BadHttpRequestException($"Unable to create payment link - {createLinkResponse.Message}");
             // Save Order
             var purchaseRequest = new PurchaseRequest
