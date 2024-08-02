@@ -43,6 +43,7 @@ if (builder.Environment.IsProduction())
     builder.WebHost.UseSentry();
 }
 var app = builder.Build();
+app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
