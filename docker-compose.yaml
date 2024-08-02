@@ -18,6 +18,8 @@ services:
       - PaystackSettings__BaseUrl=${PaystackSettings__BaseUrl}
       - PaystackSettings__Callback=${PaystackSettings__Callback}
       - SENTRY__DSN=${SENTRY__DSN}
+      - AppUser__Username=${AppUser__Username}
+      - AppUser__Password=${AppUser__Password}
     ports:
       - "5005:8080"
     networks:
