@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Security.Authentication;
 using System.Text.Json;
 using System.Threading.Tasks;
 namespace ExamCardSeller.Middlewares
@@ -73,6 +74,18 @@ namespace ExamCardSeller.Middlewares
                     problemDetails.Status = (int)statusCode;
                     problemDetails.Title = title;
                     problemDetails.Detail = detail;
+                    break;
+                case AuthenticationException _:
+                    statusCode = HttpStatusCode.Unauthorized;
+                    title = "Authentication failed.";
+                    problemDetails.Status = (int)statusCode;
+                    problemDetails.Title = title;
+                    break;
+                case UnauthorizedAccessException _:
+                    statusCode = HttpStatusCode.Forbidden;
+                    title = "Authorization failed.";
+                    problemDetails.Status = (int)statusCode;
+                    problemDetails.Title = title;
                     break;
                     // Handle other custom exceptions here...
             }
